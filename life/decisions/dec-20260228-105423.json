@@ -1,0 +1,10 @@
+{
+  "id": "dec-20260228-105423",
+  "title": "部署三层智能记忆系统",
+  "context": "需要持久化记忆 + 风格镜像 + 自我进化",
+  "options": [],
+  "selected": 0,
+  "reason": "完整实现 ClawIntelligentMemory + twinify + evolver，实现长期记忆和人格模仿",
+  "created_at": "2026-02-28T10:54:23.712335",
+  "status": "active"
+}

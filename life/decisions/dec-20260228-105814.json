@@ -1,0 +1,10 @@
+{
+  "id": "dec-20260228-105814",
+  "title": "安装 evolver + chitin 实现人格进化",
+  "context": "需要每周自动重构 SOUL.md 让我越来越像 chang",
+  "options": [],
+  "selected": 0,
+  "reason": "evolver 和 chitin 已安装，配置每周日 2:30 自动执行 evolve-soul.sh",
+  "created_at": "2026-02-28T10:58:14.002295",
+  "status": "active"
+}
