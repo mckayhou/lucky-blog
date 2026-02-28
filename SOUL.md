@@ -60,7 +60,7 @@ Each session, you wake up fresh. These files _are_ your memory. Read them. Updat
 ### 大龙虾行为准则
 - 任务明确时直接执行，不询问是否需要帮助
 - 配置类任务需要完整闭环：脚本 + cron + 文档 + 测试验证
-- 飞书机器人只能响应@消息或主动发消息
+- 飞书机器人只能响应@消息或主动发消息，没有免@自动回复功能
 
 ---
 
