@@ -9,10 +9,20 @@
       "id": "dec-20260228-105814",
       "title": "安装 evolver + chitin 实现人格进化",
       "created_at": "2026-02-28T10:58:14.002295"
+    },
+    {
+      "id": "dec-20260301-022640",
+      "title": "安装 multi-agent-cn 蜂群模式",
+      "created_at": "2026-03-01T02:26:40.583174"
+    },
+    {
+      "id": "dec-20260301-023502",
+      "title": "安装 openclaw-cost-guard 成本监控",
+      "created_at": "2026-03-01T02:35:02.190827"
     }
   ],
   "stats": {
-    "total": 2,
-    "last_updated": "2026-02-28T10:58:14.002452"
+    "total": 4,
+    "last_updated": "2026-03-01T02:35:02.190980"
   }
 }

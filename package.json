@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "puppeteer": "^24.37.5",
     "telegram-bot-api": "^2.0.1"
   }
 }

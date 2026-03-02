@@ -38,3 +38,12 @@ chitin reinforce <id>
 - 脚本会从 Chitin 提取最新人格洞察并更新 SOUL.md
 - 备份保存在 `memory/chitin-soul-backup-YYYYMMDD.md`
 - **目标:** 让我越来越像 chang 本人（语气、emoji、决策方式全模仿）
+
+---
+
+## 成本监控
+
+- **Cost Guard:** openclaw-cost-guard 已安装
+- **每日报告:** 9:00 AM 自动生成
+- **预算告警:** 超支时 exit code=2，可触发通知
+- **省钱模式:** 默认回复 ≤6 行，bullet points 优先

@@ -60,6 +60,14 @@
     "chart-image": {
       "version": "2.5.1",
       "installedAt": 1772248090876
+    },
+    "multi-agent-cn": {
+      "version": "1.2.0",
+      "installedAt": 1772303189271
+    },
+    "openclaw-cost-guard": {
+      "version": "0.1.0",
+      "installedAt": 1772303704239
     }
   }
 }

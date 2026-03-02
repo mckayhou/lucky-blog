@@ -1,0 +1,10 @@
+{
+  "id": "dec-20260301-022640",
+  "title": "安装 multi-agent-cn 蜂群模式",
+  "context": "需要多 Agent 并行调度能力",
+  "options": [],
+  "selected": 0,
+  "reason": "已安装 multi-agent-cn，5 个子 Agent：Alpha(全能)/Bravo(分析)/Charlie(策略)/Delta(精细)/Echo(侦察)",
+  "created_at": "2026-03-01T02:26:40.583174",
+  "status": "active"
+}
