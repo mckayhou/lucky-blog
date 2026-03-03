@@ -7,30 +7,52 @@
   "subagents": {
     "alpha": {
       "name": "Alpha",
-      "role": "全能主力",
-      "description": "复杂任务，不到搞定不罢休"
+      "role": "首席技术官",
+      "description": "15 年架构经验，复杂系统设计、性能优化、安全加固",
+      "soul": "/root/.openclaw/workspace/agents/alpha-soul.md",
+      "priority": 1
     },
     "bravo": {
       "name": "Bravo",
-      "role": "分析专家",
-      "description": "代码审查、架构分析、性能优化"
+      "role": "首席分析师",
+      "description": "前麦肯锡合伙人，代码审查、架构分析、风险识别",
+      "priority": 2
     },
     "charlie": {
       "name": "Charlie",
-      "role": "策略专家",
-      "description": "方案设计、战略规划、深度思考"
+      "role": "首席战略官",
+      "description": "连续创业者，方案设计、战略规划、资源调配",
+      "priority": 3
     },
     "delta": {
       "name": "Delta",
-      "role": "精细专家",
-      "description": "修 bug、文档整理、测试编写"
+      "role": "首席工程师",
+      "description": "工匠精神，bug 修复、文档编写、测试覆盖",
+      "priority": 4
     },
     "echo": {
       "name": "Echo",
-      "role": "侦察专家",
-      "description": "情报收集、搜索研究、报告撰写"
+      "role": "首席情报官",
+      "description": "前 NSA 分析师，情报收集、调研分析、快速学习",
+      "soul": "/root/.openclaw/workspace/agents/echo-soul.md",
+      "priority": 5
     }
   },
   "roundRobin": true,
-  "parallelDispatch": true
+  "parallelDispatch": true,
+  "agentToAgent": {
+    "allow": true,
+    "max_concurrent": 10,
+    "syntax": "@"
+  },
+  "selfReview": {
+    "enabled": true,
+    "script": "/root/.openclaw/workspace/agents/self-review.py",
+    "autoUpdateAgentsMd": true
+  },
+  "permissionLevels": {
+    "green": ["read", "search", "analyze"],
+    "yellow": ["write", "modify", "deploy"],
+    "red": ["delete", "production"]
+  }
 }

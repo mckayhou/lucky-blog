@@ -1,0 +1,10 @@
+{
+  "id": "dec-20260303-125707",
+  "title": "整合双层 Prompt 理论",
+  "context": "杨天润文章理论整合到现有系统",
+  "options": [],
+  "selected": 0,
+  "reason": "完成：双层 Prompt 模板 +5 个 Agent SOUL+Self-Review 机制+Agent 间@通信",
+  "created_at": "2026-03-03T12:57:07.418161",
+  "status": "active"
+}
