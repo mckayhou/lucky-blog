@@ -86,6 +86,33 @@
 4. 质量 > 数量，不做无意义的回复
 5. **视频/图像理解优先使用 coding plan 中的模型**（Kimi K2.5 等），不额外配置外部 API
 
+## GitHub Pages 发布自检机制 (2026-03-04)
+
+**决策 ID:** dec-20260304-123800
+
+**规则:** 每次页面发布后必须执行自检 + 修复流程（最多 5 轮）。
+
+**流程:**
+1. 推送到 GitHub (master + gh-pages 分支)
+2. 等待 30 秒
+3. 自检：HTTP HEAD 请求检查页面是否 200
+4. 如果失败 → 等待 30 秒 → 重试（最多 5 轮）
+5. 5 轮后仍失败 → 自动修复（重新推送 gh-pages）
+6. 修复后再自检 2 轮
+7. 仍失败 → 通知用户手动检查
+
+**脚本:** `scripts/mideast-monitor-v21.py`
+
+**函数:**
+- `verify_page_deployed(timestamp, max_retries=5)` - 自检
+- `fix_deploy_if_needed(timestamp)` - 修复
+
+**访问地址:**
+- 首页：https://mckayhou.github.io/lucky-blog/
+- 报告：https://mckayhou.github.io/lucky-blog/posts/global-conflict-{timestamp}.html
+
+---
+
 ## 多模态能力优先级 (2026-03-03)
 
 **决策 ID:** dec-20260303-185400

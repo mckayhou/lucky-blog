@@ -288,8 +288,60 @@ def send_to_feishu(report_md):
     except Exception as e:
         print(f"发送失败：{e}")
 
+def verify_page_deployed(timestamp, max_retries=5):
+    """自检页面是否成功部署（最多 5 轮）"""
+    import time
+    
+    base_url = f"https://mckayhou.github.io/lucky-blog/posts/global-conflict-{timestamp}.html"
+    
+    for attempt in range(1, max_retries + 1):
+        print(f"自检第{attempt}轮/{max_retries}...")
+        
+        # 等待 30 秒让 GitHub Pages 部署
+        time.sleep(30)
+        
+        # 检查页面
+        try:
+            import urllib.request
+            req = urllib.request.Request(base_url, method='HEAD')
+            response = urllib.request.urlopen(req, timeout=10)
+            if response.status == 200:
+                print(f"✓ 自检通过：页面已部署")
+                return True
+        except Exception as e:
+            print(f"自检失败 (尝试 {attempt}/{max_retries}): {e}")
+        
+        if attempt < max_retries:
+            print(f"等待 30 秒后重试...")
+            time.sleep(30)
+    
+    return False
+
+def fix_deploy_if_needed(timestamp):
+    """自动修复部署问题"""
+    print("尝试修复部署...")
+    
+    # 重新推送 gh-pages 分支
+    fix_commands = [
+        "cd /root/.openclaw/workspace && git checkout gh-pages 2>/dev/null || git checkout -b gh-pages",
+        f"cd /root/.openclaw/workspace && git checkout master -- posts/global-conflict-{timestamp}.html index.html",
+        "cd /root/.openclaw/workspace && git add -A",
+        f"cd /root/.openclaw/workspace && git -c user.name='Deploy Fix' -c user.email='fix@localhost' commit -m '🔧 修复部署 {timestamp}'",
+        "cd /root/.openclaw/workspace && git push -f origin gh-pages",
+        "cd /root/.openclaw/workspace && git checkout master",
+    ]
+    
+    for cmd in fix_commands:
+        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=60)
+        if result.returncode != 0:
+            print(f"修复失败：{result.stderr}")
+            return False
+    
+    print("✓ 修复推送完成")
+    return True
+
 def push_to_github(html_content, timestamp):
-    """推送 HTML 报告到 GitHub posts 目录"""
+    """推送 HTML 报告到 GitHub posts 目录 + 自检 + 修复"""
     try:
         # 保存 HTML 到 posts 目录
         html_file = POSTS_DIR / f"global-conflict-{timestamp}.html"
@@ -321,17 +373,32 @@ def push_to_github(html_content, timestamp):
             f"cd /root/.openclaw/workspace && git add posts/global-conflict-{timestamp}.html index.html",
             f"cd /root/.openclaw/workspace && git -c user.name='Global Conflict Monitor' -c user.email='monitor@localhost' commit -m '🌍 全球冲突简报 {timestamp} [auto]'",
             f"cd /root/.openclaw/workspace && git push origin master",
+            f"cd /root/.openclaw/workspace && git push origin gh-pages",
         ]
         
         for cmd in git_commands:
             result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=60)
             if result.returncode != 0:
                 print(f"Git 失败：{result.stderr}")
-                return False
         
         print(f"✓ 已推送到 GitHub: posts/global-conflict-{timestamp}.html")
-        print(f"✓ 网站访问：https://mckayhou.github.io/lucky-blog/posts/global-conflict-{timestamp}.html")
-        return True
+        
+        # 自检（最多 5 轮）
+        if verify_page_deployed(timestamp, max_retries=5):
+            print(f"✓ 网站访问：https://mckayhou.github.io/lucky-blog/posts/global-conflict-{timestamp}.html")
+            return True
+        else:
+            # 自检失败，尝试修复
+            print("⚠️ 自检失败，尝试自动修复...")
+            if fix_deploy_if_needed(timestamp):
+                # 修复后再自检一次
+                if verify_page_deployed(timestamp, max_retries=2):
+                    print(f"✓ 修复成功！网站访问：https://mckayhou.github.io/lucky-blog/posts/global-conflict-{timestamp}.html")
+                    return True
+            
+            print(f"⚠️ 部署可能延迟，请访问：https://mckayhou.github.io/lucky-blog/posts/global-conflict-{timestamp}.html")
+            return False
+            
     except Exception as e:
         print(f"GitHub 推送失败：{e}")
         return False

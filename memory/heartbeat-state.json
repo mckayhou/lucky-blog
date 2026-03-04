@@ -4,8 +4,9 @@
     "calendar": null,
     "weather": null,
     "mentions": null,
-    "cost": "2026-03-02T01:00:00Z"
+    "cost": "2026-03-04T01:00:00Z"
   },
-  "lastHeartbeat": "2026-03-01T11:00:00Z",
-  "status": "all-clear"
+  "lastHeartbeat": "2026-03-04T04:36:00Z",
+  "status": "all-clear",
+  "chitinInsights": 13
 }
