@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClawHub - 技能市场</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .skill-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .skill-card { transition: all 0.2s; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- 顶部导航 -->
+  <nav class="bg-white shadow-sm border-b">
+    <div class="max-w-6xl mx-auto px-4 py-4">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-indigo-600">🦞 ClawHub</h1>
+        <div class="text-sm text-gray-500">技能市场 MVP</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 搜索栏 -->
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="flex gap-2 mb-6">
+      <input 
+        type="text" 
+        id="searchInput"
+        placeholder="搜索技能..." 
+        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      />
+      <button 
+        onclick="searchSkills()"
+        class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+      >
+        搜索
+      </button>
+    </div>
+
+    <!-- 技能列表 -->
+    <div id="skillsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- 技能卡片会通过 JS 动态加载 -->
+    </div>
+
+    <!-- 空状态 -->
+    <div id="emptyState" class="hidden text-center py-12">
+      <div class="text-gray-400 text-lg">暂无技能</div>
+      <div class="text-gray-500 text-sm mt-2">点击"上传技能"添加第一个技能</div>
+    </div>
+  </div>
+
+  <!-- 上传按钮 -->
+  <div class="fixed bottom-6 right-6">
+    <button 
+      onclick="showUploadModal()"
+      class="px-6 py-3 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700"
+    >
+      + 上传技能
+    </button>
+  </div>
+
+  <!-- 上传模态框 -->
+  <div id="uploadModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+      <h2 class="text-xl font-bold mb-4">上传技能</h2>
+      <form onsubmit="uploadSkill(event)">
+        <div class="space-y-3">
+          <input type="text" id="skillName" placeholder="技能名称" required class="w-full px-3 py-2 border rounded" />
+          <input type="text" id="skillVersion" placeholder="版本号" value="1.0.0" required class="w-full px-3 py-2 border rounded" />
+          <input type="text" id="skillAuthor" placeholder="作者" required class="w-full px-3 py-2 border rounded" />
+          <textarea id="skillDesc" placeholder="描述" rows="3" class="w-full px-3 py-2 border rounded"></textarea>
+          <input type="text" id="skillKeywords" placeholder="关键词（逗号分隔）" class="w-full px-3 py-2 border rounded" />
+        </div>
+        <div class="flex gap-2 mt-4">
+          <button type="submit" class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">上传</button>
+          <button type="button" onclick="hideUploadModal()" class="flex-1 px-4 py-2 border rounded hover:bg-gray-50">取消</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3000/api/v1'
+    const API_TOKEN = 'clawhub-dev-token-12345'
+
+    // 加载技能列表
+    async function loadSkills() {
+      try {
+        const res = await fetch(`${API_BASE}/skills`)
+        const data = await res.json()
+        renderSkills(data.skills || [])
+      } catch (error) {
+        console.error('加载失败:', error)
+      }
+    }
+
+    // 搜索技能
+    async function searchSkills() {
+      const query = document.getElementById('searchInput').value
+      try {
+        const res = await fetch(`${API_BASE}/search?q=${encodeURIComponent(query)}`)
+        const data = await res.json()
+        renderSkills(data.results || [])
+      } catch (error) {
+        console.error('搜索失败:', error)
+      }
+    }
+
+    // 渲染技能列表
+    function renderSkills(skills) {
+      const container = document.getElementById('skillsList')
+      const emptyState = document.getElementById('emptyState')
+      
+      if (skills.length === 0) {
+        container.innerHTML = ''
+        emptyState.classList.remove('hidden')
+        return
+      }
+      
+      emptyState.classList.add('hidden')
+      container.innerHTML = skills.map(skill => `
+        <div class="skill-card bg-white p-4 rounded-lg border hover:shadow-lg cursor-pointer" onclick="viewSkill('${skill.name}')">
+          <div class="flex items-start justify-between mb-2">
+            <h3 class="font-bold text-lg text-gray-800">${skill.name}</h3>
+            <span class="text-xs bg-indigo-100 text-indigo-600 px-2 py-1 rounded">${skill.version}</span>
+          </div>
+          <p class="text-gray-600 text-sm mb-3 line-clamp-2">${skill.description || '暂无描述'}</p>
+          <div class="flex items-center justify-between text-xs text-gray-500">
+            <span>👤 ${skill.author || '未知'}</span>
+            <span>📅 ${new Date(skill.updated_at).toLocaleDateString('zh-CN')}</span>
+          </div>
+          ${skill.keywords ? `
+            <div class="mt-2 flex flex-wrap gap-1">
+              ${skill.keywords.slice(0, 3).map(k => `<span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">${k}</span>`).join('')}
+            </div>
+          ` : ''}
+        </div>
+      `).join('')
+    }
+
+    // 查看技能详情
+    function viewSkill(name) {
+      alert(`查看技能详情：${name}\n（详情页待实现）`)
+    }
+
+    // 显示上传模态框
+    function showUploadModal() {
+      document.getElementById('uploadModal').classList.remove('hidden')
+    }
+
+    // 隐藏上传模态框
+    function hideUploadModal() {
+      document.getElementById('uploadModal').classList.add('hidden')
+    }
+
+    // 上传技能
+    async function uploadSkill(event) {
+      event.preventDefault()
+      
+      const payload = {
+        name: document.getElementById('skillName').value,
+        version: document.getElementById('skillVersion').value,
+        description: document.getElementById('skillDesc').value,
+        author: document.getElementById('skillAuthor').value,
+        keywords: document.getElementById('skillKeywords').value.split(',').map(k => k.trim()).filter(k => k)
+      }
+      
+      try {
+        const res = await fetch(`${API_BASE}/skills`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${API_TOKEN}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        })
+        
+        const result = await res.json()
+        
+        if (res.ok) {
+          alert('上传成功！')
+          hideUploadModal()
+          loadSkills()
+        } else {
+          alert(`上传失败：${result.error}`)
+        }
+      } catch (error) {
+        alert(`上传失败：${error.message}`)
+      }
+    }
+
+    // 页面加载时获取技能列表
+    loadSkills()
+  </script>
+</body>
+</html>

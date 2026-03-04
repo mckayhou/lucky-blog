@@ -1,0 +1,2 @@
+/root/.openclaw/workspace/scripts/keto-morning.sh: line 16: syntax error near unexpected token `('
+/root/.openclaw/workspace/scripts/keto-morning.sh: line 16: `TODAY=\$(date +%Y-%m-%d)'

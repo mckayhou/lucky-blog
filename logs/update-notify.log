@@ -1,0 +1,23 @@
+[2026-03-03 14:17:23] === 开始发送更新通知 ===
+[2026-03-03 14:17:23] 发送消息到飞书...
+error: required option '-t, --target <dest>' not specified
+[2026-03-03 14:17:26] 消息发送成功
+[2026-03-03 14:17:26] === 更新通知完成 ===
+[2026-03-03 14:19:23] === 开始发送更新通知 ===
+[2026-03-03 14:19:23] 发送消息到飞书...
+error: required option '-t, --target <dest>' not specified
+[2026-03-03 14:19:25] 消息发送成功
+[2026-03-03 14:19:25] === 更新通知完成 ===
+[2026-03-03 14:19:57] === 开始发送更新通知 ===
+[2026-03-03 14:19:57] 发送消息到飞书...
+[plugins] plugins.allow is empty; discovered non-bundled plugins may auto-load: adp-openclaw (/root/.openclaw/extensions/adp-openclaw/index.ts), ddingtalk (/root/.openclaw/extensions/ddingtalk/index.ts), qqbot (/root/.openclaw/extensions/qqbot/index.ts), wecom (/root/.openclaw/extensions/wecom/index.ts). Set plugins.allow to explicit trusted ids.
+[plugins] feishu_doc: Registered feishu_doc, feishu_app_scopes
+[plugins] feishu_chat: Registered feishu_chat tool
+[plugins] feishu_wiki: Registered feishu_wiki tool
+[plugins] feishu_drive: Registered feishu_drive tool
+[plugins] feishu_bitable: Registered bitable tools
+[plugins] wecom failed during register from /root/.openclaw/extensions/wecom/index.ts: TypeError: api.registerHttpHandler is not a function
+[info]: [ 'client ready' ]
+✅ Sent via Feishu. Message ID: om_x100b555397a2c8b4b2cb16ad8ae3ab2 (chat ou_387ea30b17d6ea838f90c47bdb655330)
+[2026-03-03 14:20:07] 消息发送成功
+[2026-03-03 14:20:07] === 更新通知完成 ===

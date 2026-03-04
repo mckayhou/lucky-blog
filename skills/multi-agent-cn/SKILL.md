@@ -220,14 +220,28 @@ keywords: [multi-agent, 多 agent, 双层 prompt, 将军，指挥，sessions_spa
 {
   "task": "完整的、自包含的任务描述，包含所有必要上下文",
   "sessionKey": "echo",
+  "model": "qwen3.5-plus",
   "runTimeoutSeconds": 300
 }
 ```
 
-三个必填字段：
+四个必填字段：
 1. **task** — 自包含的任务描述（子 Agent 看不到你和用户的对话，必须写清楚所有上下文）
 2. **sessionKey** — 只能是：echo / elon / henry / delta / charlie
-3. **runTimeoutSeconds** — 固定 300
+3. **model** — 根据 sessionKey 自动匹配对应模型（见下方模型绑定表）
+4. **runTimeoutSeconds** — 固定 300
+
+### 模型绑定表
+
+| sessionKey | 角色 | 绑定模型 |
+|-----------|------|---------|
+| `echo` | 首席助理 | `qwen3.5-plus` |
+| `elon` | CTO | `glm-5` |
+| `henry` | CMO | `qwen3.5-plus` |
+| `delta` | 工程师 | `glm-5` |
+| `charlie` | 战略官 | `qwen3.5-plus` |
+
+**规则：** 根据 sessionKey 自动选择对应模型，不要随意更改。
 
 ### ⚠️ sessionKey 是 session 复用的关键！⚠️
 
@@ -240,11 +254,15 @@ keywords: [multi-agent, 多 agent, 双层 prompt, 将军，指挥，sessions_spa
 
 正确示例：
 ```json
-sessions_spawn({ "task": "...", "sessionKey": "echo", "runTimeoutSeconds": 300 })
+sessions_spawn({ "task": "...", "sessionKey": "echo", "model": "qwen3.5-plus", "runTimeoutSeconds": 300 })
+sessions_spawn({ "task": "...", "sessionKey": "delta", "model": "glm-5", "runTimeoutSeconds": 300 })
 ```
 
 错误示例（绝对禁止）：
 ```json
+sessions_spawn({ "task": "...", "sessionKey": "echo", "runTimeoutSeconds": 300 })
+// ❌ 没有 model 字段！子 Agent 不会使用绑定的模型！
+
 sessions_spawn({ "task": "...", "runTimeoutSeconds": 300 })
 // ❌ 没有 sessionKey！会创建垃圾 session！子 Agent 失忆！
 ```
@@ -285,6 +303,7 @@ sessions_spawn({ "task": "...", "runTimeoutSeconds": 300 })
 sessions_spawn({
   "task": "重构认证系统。当前项目路径是 /path/to/project。现有认证使用 JWT + session，需要改为……期望结果是……",
   "sessionKey": "echo",
+  "model": "qwen3.5-plus",
   "runTimeoutSeconds": 300
 })
 ```
@@ -336,9 +355,9 @@ sessions_spawn({
 
 **第二步 — 同时发出三个 spawn：**
 ```
-sessions_spawn({ "task": "修复登录页样式 bug……", "sessionKey": "delta", "runTimeoutSeconds": 300 })
-sessions_spawn({ "task": "调研 Redis 缓存最佳实践……", "sessionKey": "charlie", "runTimeoutSeconds": 300 })
-sessions_spawn({ "task": "更新 README 文档……", "sessionKey": "henry", "runTimeoutSeconds": 300 })
+sessions_spawn({ "task": "修复登录页样式 bug……", "sessionKey": "delta", "model": "glm-5", "runTimeoutSeconds": 300 })
+sessions_spawn({ "task": "调研 Redis 缓存最佳实践……", "sessionKey": "charlie", "model": "qwen3.5-plus", "runTimeoutSeconds": 300 })
+sessions_spawn({ "task": "更新 README 文档……", "sessionKey": "henry", "model": "qwen3.5-plus", "runTimeoutSeconds": 300 })
 ```
 
 **第三步 — 停嘴。**
@@ -405,7 +424,9 @@ spawn 返回 `accepted` = 你的回合结束。**不要再写任何文字。**
 
 - ❌ 不说话就直接 spawn（用户看不到 tool call，会以为你挂了！）
 - ❌ 调 `sessions_spawn` 时不传 `sessionKey`
+- ❌ 调 `sessions_spawn` 时不传 `model`
 - ❌ sessionKey 用 echo/elon/henry/delta/charlie 以外的值
+- ❌ model 不按照绑定表选择（见"五、Spawn 格式"中的模型绑定表）
 - ❌ 自己调 exec / 读写文件 / 搜索（将军不亲自干活！）
 - ❌ spawn 后还继续写文字
 - ❌ 用 `message` 工具

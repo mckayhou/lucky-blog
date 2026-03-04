@@ -68,6 +68,18 @@
     "openclaw-cost-guard": {
       "version": "0.1.0",
       "installedAt": 1772303704239
+    },
+    "ucloud-deepseek-ocr": {
+      "version": "1.0.0",
+      "installedAt": 1772532676458
+    },
+    "tesseract-ocr": {
+      "version": "1.0.0",
+      "installedAt": 1772532798209
+    },
+    "bilibili-youtube-watcher": {
+      "version": "1.0.0",
+      "installedAt": 1772534945867
     }
   }
 }
